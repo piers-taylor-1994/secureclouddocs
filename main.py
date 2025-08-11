@@ -7,7 +7,8 @@ import boto3
 ALLOWED_CONTENT_TYPES = {
     "application/json",
     "image/jpeg",
-    "image/png"
+    "image/png",
+    "application/octet-stream"
 }
 
 load_dotenv()
