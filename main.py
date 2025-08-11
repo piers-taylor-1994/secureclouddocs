@@ -1,8 +1,14 @@
 from datetime import datetime, timezone
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, HTTPException
 from dotenv import load_dotenv
 import os
 import boto3
+
+ALLOWED_CONTENT_TYPES = {
+    "application/pdf",
+    "image/jpeg",
+    "image/png"
+}
 
 load_dotenv()
 
@@ -45,4 +51,10 @@ def generate_upload_url(filename):
 
 @app.post("/upload")
 def upload_file(filename: str = Body( ... ), content_type: str = Body( ... )):
+    if not filename:
+        raise HTTPException(status_code=400, detail="Invalid filename, cannot be blank.")
+
+    if content_type not in ALLOWED_CONTENT_TYPES:
+        raise HTTPException(status_code=400, detail="Unsupported content type.")
+
     return created_presigned_upload_url(filename, content_type)
