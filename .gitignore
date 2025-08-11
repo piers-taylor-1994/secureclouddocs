@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 env/
 aws-elastic-beanstalk-cli-setup/
+.env
