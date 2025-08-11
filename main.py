@@ -5,13 +5,12 @@ import os
 import boto3
 
 ALLOWED_CONTENT_TYPES = {
-    "application/pdf",
+    "application/json",
     "image/jpeg",
     "image/png"
 }
 
 load_dotenv()
-
 app = FastAPI()
 s3_client = boto3.client(
     "s3",
