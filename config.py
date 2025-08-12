@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
+import re
 
 load_dotenv()
 
@@ -13,6 +14,7 @@ ALLOWED_CONTENT_TYPES = {
     "application/pdf",
     "application/octet-stream",
 }
+FILENAME_PATTERN = re.compile(r"^[\w.\- ]+$")
 MAX_FILENAME_LENGTH = int(os.getenv("MAX_FILENAME_LENGTH", "128"))
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 LOG_FORMAT = os.getenv(
