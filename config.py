@@ -4,7 +4,7 @@ import re
 
 load_dotenv()
 
-AWS_REGION = os.getenv("AWS_REGION", "eu-west-1")  # sensible default
+AWS_REGION = os.getenv("AWS_REGION", "eu-west-2")
 S3_BUCKET = os.getenv("S3_BUCKET")
 PRESIGNED_URL_EXPIRY = int(os.getenv("PRESIGNED_URL_EXPIRY", "300"))
 ALLOWED_CONTENT_TYPES = {
