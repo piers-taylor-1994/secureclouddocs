@@ -14,6 +14,11 @@ ALLOWED_CONTENT_TYPES = {
     "application/octet-stream",
 }
 MAX_FILENAME_LENGTH = int(os.getenv("MAX_FILENAME_LENGTH", "128"))
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+LOG_FORMAT = os.getenv(
+    "LOG_FORMAT",
+    '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "name": "%(name)s", "message": "%(message)s"}'
+)
 
 if not S3_BUCKET:
     raise RuntimeError("S3_BUCKET is not set in environment variables.")
