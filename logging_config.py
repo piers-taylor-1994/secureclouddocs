@@ -7,8 +7,12 @@ class JsonFormatter(logging.Formatter):
         log_obj = {
             "timestamp": self.formatTime(record, self.datefmt),
             "level": record.levelname,
+            "logger": record.name,
             "message": record.getMessage()
         }
+        if hasattr(record, "request_id"):
+            log_obj["request_id"] = record.request_id
+
         return json.dumps(log_obj)
 
 def setup_logging():
