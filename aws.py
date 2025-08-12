@@ -17,7 +17,7 @@ def create_presigned_upload_url(filename, content_type):
             "Bucket": bucket, 
             "Key": key, 
             "ContentType": content_type},
-        ExpiresIn=PRESIGNED_URL_EXPIRY  # 5 minutes
+        ExpiresIn=PRESIGNED_URL_EXPIRY
     )
 
     return {
