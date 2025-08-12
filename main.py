@@ -13,15 +13,14 @@ import traceback
 
 class RequestIDMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
-        request_id = request.headers.get("X-Request-ID", str(uuid4()))
+        rid = request.headers.get("X-Request-ID")
+        if not rid or not rid.strip():
+            rid = str(uuid4())
+        
+        request_id_ctx.set(rid)
+        request.state.request_id = rid
 
-        request.state.request_id = request_id
-
-        response = await call_next(request)
-        response.headers["X-Request-ID"] = request_id
-        return response
-
-
+        return await call_next(request)
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -36,9 +35,9 @@ async def global_exception_handler(request: Request, exc: Exception):
             "error": str(exc),
             "path": request.url.path,
             "method": request.method,
-            "trace": traceback.format_exc()
+            "trace": traceback.format_exc(),
+            "request_id": request.state.request_id
         }),
-        extra={"request_id": request.state.request_id}
     )
     return JSONResponse(
         status_code=500,
