@@ -1,11 +1,5 @@
 from fastapi import HTTPException
-
-ALLOWED_CONTENT_TYPES = {
-    "application/json",
-    "image/jpeg",
-    "image/png",
-    "application/octet-stream"
-}
+from config import *
 
 def validate_filename(filename):
     if not filename:

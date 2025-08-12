@@ -1,17 +1,14 @@
-from datetime import datetime, timezone
-from dotenv import load_dotenv
-import os
+from datetime import datetime, timedelta, timezone
+from config import *
 import boto3
-
-load_dotenv()
 
 s3_client = boto3.client(
     "s3",
-    region_name=os.getenv("AWS_REGION")
+    region_name=AWS_REGION
 )
 
-def created_presigned_upload_url(filename, content_type):
-    bucket = os.getenv("S3_BUCKET")
+def create_presigned_upload_url(filename, content_type):
+    bucket = S3_BUCKET
     key = f"uploads/{filename}"
 
     url = s3_client.generate_presigned_url(
@@ -20,12 +17,12 @@ def created_presigned_upload_url(filename, content_type):
             "Bucket": bucket, 
             "Key": key, 
             "ContentType": content_type},
-        ExpiresIn=300  # 5 minutes
+        ExpiresIn=PRESIGNED_URL_EXPIRY  # 5 minutes
     )
 
     return {
         "url": url,
-        "expires_at": datetime.now(timezone.utc).isoformat() + "Z",
+        "expires_at": (datetime.now(timezone.utc) + timedelta(seconds=PRESIGNED_URL_EXPIRY)).isoformat() + "Z",
         "key": key,
         "content_type": content_type
     }
