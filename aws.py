@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from config import *
+from config import AWS_REGION, S3_BUCKET, PRESIGNED_URL_EXPIRY
 import boto3
 
 s3_client = boto3.client(

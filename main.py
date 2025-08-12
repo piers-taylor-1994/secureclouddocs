@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from fastapi import FastAPI, Body, Request
 from fastapi.responses import JSONResponse
 from aws import create_presigned_upload_url
-from logging_config import *
+from logging_config import setup_logging, json
 from middleware import RequestIDMiddleware
 from validators import *
 

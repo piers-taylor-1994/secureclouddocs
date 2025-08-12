@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from config import *
+from config import FILENAME_PATTERN, ALLOWED_CONTENT_TYPES
 
 def validate_filename(filename):
     if not filename or not FILENAME_PATTERN.match(filename):

@@ -1,6 +1,6 @@
 import logging
 import json
-from config import *
+from config import LOG_LEVEL
 from contextvars import ContextVar
 
 request_id_ctx = ContextVar("request_id", default="")
