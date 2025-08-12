@@ -3,24 +3,13 @@ from fastapi import FastAPI, Body, Request
 from fastapi.responses import JSONResponse
 from aws import create_presigned_upload_url
 from logging_config import *
+from middleware import RequestIDMiddleware
 from validators import *
-from uuid import uuid4
-from starlette.middleware.base import BaseHTTPMiddleware
+
 import logging
 import traceback
 
 #fastapi dev main.py
-
-class RequestIDMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        rid = request.headers.get("X-Request-ID")
-        if not rid or not rid.strip():
-            rid = str(uuid4())
-        
-        request_id_ctx.set(rid)
-        request.state.request_id = rid
-
-        return await call_next(request)
 
 setup_logging()
 logger = logging.getLogger(__name__)

@@ -7,7 +7,7 @@ request_id_ctx = ContextVar("request_id", default="-")
 
 class RequestIDFilter(logging.Filter):
     def filter(self, record):
-        record.request_id = getattr(record, "request_id", "-")
+        record.request_id = getattr(record, "request_id", "")
         return True
 
 class JsonFormatter(logging.Formatter):
@@ -17,7 +17,7 @@ class JsonFormatter(logging.Formatter):
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),
-            "request_id": getattr(record, "request_id", "-")
+            "request_id": getattr(record, "request_id", "")
         }
 
         return json.dumps(log_obj)
