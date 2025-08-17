@@ -1,6 +1,8 @@
-from datetime import datetime, timezone
-from fastapi import FastAPI, Body, Request
+from datetime import datetime, timezone, timedelta
+from fastapi import FastAPI, Body, Request, Depends
 from fastapi.responses import JSONResponse
+from fastapi.security import OAuth2PasswordRequestForm
+from auth import create_access_token, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES, users_db
 from aws import create_presigned_upload_url
 from logging_config import setup_logging, json
 from middleware import RequestIDMiddleware
@@ -53,3 +55,18 @@ def upload_file(request: Request, filename: str = Body( ... ), content_type: str
     validate_content_type(content_type)
 
     return create_presigned_upload_url(filename, content_type)
+
+@app.post("/auth/token")
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = users_db.get(form_data.username)
+    if not user or form_data.password != user["password"]:
+        from fastapi import HTTPException, status
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+    
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(data={"sub": user["username"]}, expires_delta=access_token_expires)
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@app.get("/secure/presigned-url")
+def secure_endpoint(current_user: str = Depends(get_current_user)):
+    return {"message": f"Hello, {current_user}. Here's your presigned URL placeholder."}
