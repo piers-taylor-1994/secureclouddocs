@@ -8,6 +8,7 @@ from logging_config import setup_logging, json
 from middleware import RequestIDMiddleware
 from validators import *
 from context import user_name_ctx
+from presigned import validate_presigned_url
 
 import logging
 import traceback
@@ -69,8 +70,15 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     return {"access_token": access_token, "token_type": "bearer"}
 
 @app.get("/secure/presigned-url")
-def secure_endpoint(current_user: str = Depends(get_current_user)):
+def secure_endpoint(request: Request, current_user: str = Depends(get_current_user)):
     user_name_ctx.set(current_user)
-    logger.info("Secure presigned url called")
+    
+    params = {
+        "expires_in": request.query_params.get("expires_in"),
+        "method": request.query_params.get("method"),
+        "filename": request.query_params.get("filename")
+    }
+
+    validate_presigned_url(params)
 
     return {"message": f"Hello, {current_user}. Here's your presigned URL placeholder."}
