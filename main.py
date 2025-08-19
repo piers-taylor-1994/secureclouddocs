@@ -4,11 +4,12 @@ from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from auth import create_access_token, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES, users_db
 from aws import create_presigned_upload_url
-from logging_config import setup_logging, json
+from logging_config import setup_logging, json, logger
 from middleware import RequestIDMiddleware
 from validators import *
 from context import user_name_ctx
 from presigned import validate_presigned_url
+from upload_router import router
 
 import logging
 import traceback
@@ -16,10 +17,10 @@ import traceback
 #fastapi dev main.py
 
 setup_logging()
-logger = logging.getLogger("securecloud")
 
 app = FastAPI()
 app.add_middleware(RequestIDMiddleware)
+app.include_router(router)
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
@@ -72,6 +73,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 @app.get("/secure/presigned-url")
 def secure_endpoint(request: Request, current_user: str = Depends(get_current_user)):
     user_name_ctx.set(current_user)
+
+    logger.info(f"Secure_endpoint called")
     
     params = {
         "expires_in": request.query_params.get("expires_in"),
