@@ -6,14 +6,12 @@ from jose import JWTError, jwt
 from pydantic import BaseModel
 from context import user_name_ctx
 
-#Config
 SECRET_KEY = "QKMBSOLWNVjYROmAepcpcqIEdDYmOU"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
-#Models
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -21,7 +19,6 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Optional[str] = None
 
-#Dummy users DB
 users_db = {
     "piers": {
         "username": "piers",
@@ -29,7 +26,6 @@ users_db = {
     }
 }
 
-#functions
 def create_access_token(user_name: str, expires_delta: Optional[timedelta] = None):
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=15))
     to_encode = {

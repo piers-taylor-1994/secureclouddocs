@@ -13,6 +13,8 @@ ALLOWED_CONTENT_TYPES = {
     "image/png",
     "application/pdf",
     "application/octet-stream",
+    "multipart/form-data",
+    "text/plain"
 }
 FILENAME_PATTERN = re.compile(r"^[\w.\- ]+$")
 MAX_FILENAME_LENGTH = int(os.getenv("MAX_FILENAME_LENGTH", "128"))
